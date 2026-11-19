@@ -1,0 +1,8 @@
+﻿langkah,baris_sebelum,baris_sesudah,dibuang,alasan
+0. data awal,10276,10276,0,
+1. kolom kunci kosong,10276,10276,0,teks/rating/bintang/place_id kosong
+2. duplikat review_id,10276,10276,0,review yang sama tercatat dua kali
+3. rating tidak valid,10276,10276,0,rating bukan bilangan bulat 1-5
+4. pembersihan teks,10276,10276,0,4501 teks dirapikan (3892 berisi tag <br>/HTML)
+5. teks rusak/kosong/<3 huruf,10276,10271,5,"teks '#NAME?', kosong, atau hampir tanpa huruf"
+6. teks kembar di hotel yang sama,10271,10270,1,teks sama persis (setelah normalisasi) di hotel yang sama

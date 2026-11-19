@@ -1,0 +1,31 @@
+bintang,aspek,rata_rata,std,n
+1,Lokasi,4.057,0.446,813
+1,Kebersihan,4.096,0.828,836
+1,Pelayanan,4.22,0.53,1004
+1,Kamar dan fasilitas,3.839,0.548,1179
+1,Harga,4.107,0.516,670
+1,Makanan dan minuman,4.066,0.378,717
+2,Lokasi,4.042,0.498,800
+2,Kebersihan,3.709,1.073,896
+2,Pelayanan,4.053,0.663,974
+2,Kamar dan fasilitas,3.669,0.675,1302
+2,Harga,3.975,0.614,687
+2,Makanan dan minuman,3.954,0.401,643
+3,Lokasi,4.033,0.475,869
+3,Kebersihan,3.93,0.962,899
+3,Pelayanan,4.155,0.603,1128
+3,Kamar dan fasilitas,3.815,0.6,1331
+3,Harga,3.974,0.628,512
+3,Makanan dan minuman,3.98,0.402,785
+4,Lokasi,4.037,0.509,888
+4,Kebersihan,4.066,0.871,783
+4,Pelayanan,4.216,0.497,1293
+4,Kamar dan fasilitas,3.929,0.493,1394
+4,Harga,3.894,0.688,359
+4,Makanan dan minuman,4.046,0.391,1049
+5,Lokasi,3.93,0.538,758
+5,Kebersihan,4.16,0.749,552
+5,Pelayanan,4.215,0.486,1283
+5,Kamar dan fasilitas,3.977,0.458,1252
+5,Harga,3.808,0.672,275
+5,Makanan dan minuman,4.077,0.389,1047

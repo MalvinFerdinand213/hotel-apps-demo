@@ -1,0 +1,23 @@
+{
+  "teks_berubah_setelah_cleaning": 4501,
+  "teks_mengandung_br_html": 3892,
+  "teks_rusak_contoh": [
+    "#NAME?",
+    "#NAME?",
+    "#NAME?",
+    "#NAME?",
+    "#NAME?"
+  ],
+  "teks_kembar_lintas_hotel": 7,
+  "contoh_kembar_lintas_hotel": {
+    "Bersih dan nyaman": 2,
+    "Tempat yg nyaman": 1,
+    "Tempat nyaman, karyawan ramah,,": 1,
+    "Tempat nyaman karyawan ramah": 1,
+    "Good place.. cozy ..": 1
+  },
+  "teks_lebih_3000_karakter": 22,
+  "baris_awal": 10276,
+  "baris_akhir": 10270,
+  "hotel": 931
+}

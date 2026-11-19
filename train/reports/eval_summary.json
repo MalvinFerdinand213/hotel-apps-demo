@@ -1,0 +1,69 @@
+{
+  "n_review": 10270,
+  "n_hotel": 931,
+  "holdout": {
+    "latih_review": 8307,
+    "latih_hotel": 744,
+    "uji_review": 1963,
+    "uji_hotel": 187
+  },
+  "ambang_3kelas_cv": {
+    "kamus_saja": [
+      2.545,
+      3.521
+    ],
+    "ml_saja": [
+      2.962,
+      3.764
+    ],
+    "pipeline_isi": [
+      3.202,
+      3.621
+    ]
+  },
+  "ci95_bootstrap_per_hotel": {
+    "ml_saja": {
+      "MAE": [
+        0.44875092619233503,
+        0.48031963090728297
+      ],
+      "Spearman": [
+        0.5551013993296131,
+        0.5996079108868976
+      ]
+    },
+    "pipeline_isi": {
+      "MAE": [
+        0.7904227894712105,
+        0.8190577342389954
+      ],
+      "Spearman": [
+        0.4932743786797753,
+        0.5386378252001888
+      ]
+    }
+  },
+  "cakupan_review_pipeline_cv": 0.9090555014605648,
+  "error": {
+    "rating<=2_diprediksi>=4_%": 2.8095733610822062,
+    "rating=5_diprediksi<3.5_%": 2.791014295439074
+  },
+  "uji_kewajaran_tanda_benar": "43/43",
+  "confusion_3kelas_cv": [
+    [
+      581,
+      241,
+      139
+    ],
+    [
+      89,
+      141,
+      283
+    ],
+    [
+      151,
+      439,
+      8206
+    ]
+  ]
+}

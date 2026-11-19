@@ -1,0 +1,10 @@
+{
+ "n_review": 10270,
+ "n_hotel": 931,
+ "auc_pipeline": 0.902,
+ "spearman_pipeline": 0.516,
+ "auc_ml": 0.942,
+ "spearman_ml": 0.578,
+ "mae_ml": 0.464,
+ "cakupan": 0.909
+}

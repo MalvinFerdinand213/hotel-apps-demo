@@ -1,0 +1,9 @@
+﻿metode,evaluasi,n,MAE,RMSE,Spearman,AUC_rating<=3,macroF1_3kelas,akurasi_3kelas
+Rata-rata global,CV-5 per hotel,10270,0.8466,1.1499,-0.0294,0.4835,0.3076,0.8565
+Kamus sentimen saja,CV-5 per hotel,10270,0.4972,0.8824,0.4423,0.8788,0.5768,0.8574
+TF-IDF+Ridge (teks utuh),CV-5 per hotel,10270,0.464,0.7064,0.5776,0.9418,0.6487,0.8901
+Pipeline (rata-rata skor aspek),CV-5 per hotel,10270,0.8041,0.9553,0.5159,0.9017,0.6018,0.8693
+Rata-rata global,Hold-out 20% hotel,1963,0.8779,1.2136,,0.5,0.3044,0.84
+Kamus sentimen saja,Hold-out 20% hotel,1963,0.5014,0.8742,0.4775,0.8947,0.6023,0.8584
+TF-IDF+Ridge (teks utuh),Hold-out 20% hotel,1963,0.4633,0.7031,0.6078,0.9476,0.688,0.8961
+Pipeline (rata-rata skor aspek),Hold-out 20% hotel,1963,0.7928,0.9487,0.558,0.9179,0.618,0.8543
