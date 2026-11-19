@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Aspek Hotel — Analisis Review per Bintang</title>
-  <meta name="description" content="Nilai aspek sebuah review hotel (lokasi, kebersihan, pelayanan, kamar, harga, makanan) dan bandingkan dengan rata-rata hotel di bintang yang sama.">
+  <meta name="description" content="Tempel review tamu hotel, lihat aspek mana yang dipuji dan mana yang dikeluhkan, dibanding hotel dengan bintang yang sama.">
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Cpath d='M16 6l2.9 6 6.6.8-4.9 4.5 1.3 6.5L16 20.6 10.1 23.8l1.3-6.5L6.5 12.8l6.6-.8z' fill='%23fff'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
       <nav class="nav-links" aria-label="Navigasi utama">
         <a href="#cara">Cara kerja</a>
         <a href="#coba">Coba</a>
-        <a href="#benchmark">Benchmark</a>
+        <a href="#benchmark">Rata-rata hotel</a>
         <a href="#temuan">Hasil</a>
         <a href="#metode">Metode</a>
       </nav>
@@ -39,8 +39,8 @@
       <div class="hero-glow" aria-hidden="true"></div>
       <div class="hero-in">
         <p class="eyebrow">Analisis review Google Maps · Jakarta &amp; Bali</p>
-        <h1 class="hero-title">Seberapa bagus<br>review ini<span class="dot-accent">.</span></h1>
-        <p class="hero-sub">Aspek Hotel menunjukkan di aspek mana sebuah review hotel lebih baik atau lebih buruk dibanding rata-rata hotel di bintang yang sama.</p>
+        <h1 class="hero-title">Apa kata tamu<br>tentang hotelmu<span class="dot-accent">.</span></h1>
+        <p class="hero-sub">Tempel review tamu, lihat aspek mana yang dipuji dan mana yang dikeluhkan, dibanding hotel dengan bintang yang sama.</p>
         <div class="hero-cta">
           <a class="pill pill-light" href="#coba">Mulai analisis
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
@@ -72,17 +72,17 @@
           <article class="tile reveal">
             <span class="num">01</span>
             <h3>Tempel review</h3>
-            <p>Tulis atau tempel review baru dari hotel mana pun. Foto boleh ditambahkan sebagai pelengkap.</p>
+            <p>Tulis atau tempel review tamu, lalu pilih hotel itu bintang berapa.</p>
           </article>
           <article class="tile reveal">
             <span class="num">02</span>
-            <h3>Model memberi skor</h3>
-            <p>Bagian teks yang menyebut tiap aspek dinilai 1–5. Rating dari kamu bisa ikut menentukan hasil akhir.</p>
+            <h3>Dinilai per aspek</h3>
+            <p>Bagian review yang membahas lokasi, kebersihan, pelayanan, kamar, harga, dan makanan dinilai satu per satu.</p>
           </article>
           <article class="tile reveal">
             <span class="num">03</span>
-            <h3>Bandingkan</h3>
-            <p>Lihat tiap aspek di atas atau di bawah rata-rata hotel dengan bintang yang sama.</p>
+            <h3>Lihat hasilnya</h3>
+            <p>Tiap aspek diberi label Bagus, Cukup, atau Kurang, dan dibandingkan dengan hotel yang bintangnya sama.</p>
           </article>
         </div>
       </div>
@@ -92,22 +92,25 @@
     <section class="sec sec-gray" id="coba" aria-labelledby="h-coba">
       <div class="wrap">
         <p class="eyebrow dark reveal">Coba sekarang</p>
-        <h2 class="sec-title reveal" id="h-coba">Analisis review kamu.</h2>
-        <p class="sec-lead reveal">Pembanding tersedia untuk hotel <span id="heroTiers">bintang yang sama</span>.</p>
+        <h2 class="sec-title reveal" id="h-coba">Tempel review tamu.</h2>
+        <p class="sec-lead reveal">Cukup dua langkah: tempel review, pilih bintang hotel. <span id="heroTiers" hidden></span></p>
 
         <div class="grid">
           <!-- ============ KIRI: INPUT ============ -->
           <div class="col-left">
             <section class="card" aria-labelledby="h-review">
-              <div class="card-head"><span class="step">1</span><h3 id="h-review">Review</h3></div>
+              <div class="card-head"><span class="step">1</span><h3 id="h-review">Review tamu</h3></div>
 
               <div class="field">
                 <label for="text">Teks review</label>
-                <textarea id="text" class="textarea" rows="6" maxlength="3000" placeholder="Tempel atau ketik review hotel di sini…"></textarea>
+                <textarea id="text" class="textarea" rows="6" maxlength="3000" placeholder="Contoh: Kamar bersih dan luas, staf ramah, tapi sarapannya kurang enak…"></textarea>
+                <div class="examples"><span>Belum punya review? Coba contoh:</span>
+                  <button type="button" class="ex" data-ex="pos">Positif</button><button type="button" class="ex" data-ex="net">Biasa saja</button><button type="button" class="ex" data-ex="neg">Negatif</button></div>
                 <div class="hint-row"><span id="stale" class="stale" hidden>Input berubah sejak analisis terakhir. Klik Analisis untuk menilai ulang.</span><span class="counter" id="counter">0 / 3000</span></div>
               </div>
 
-              <div class="field">
+              <!-- Unggah foto disembunyikan sampai analisis foto (Qwen3-VL) tersedia. Hapus atribut hidden di bawah untuk mengaktifkan lagi. -->
+              <div class="field" hidden>
                 <span class="label" id="photoLabel">Foto review <em>(opsional)</em></span>
                 <label class="drop" for="photos" aria-labelledby="photoLabel">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
@@ -119,27 +122,30 @@
               </div>
 
               <div class="field">
-                <span class="label" id="tierLabel">Bintang hotel</span>
+                <span class="label" id="tierLabel">Hotel ini bintang berapa?</span>
                 <div class="seg seg-tier" id="tierSeg" role="radiogroup" aria-labelledby="tierLabel"></div>
                 <p class="note" id="tierNote"></p>
               </div>
             </section>
 
-            <section class="card" aria-labelledby="h-rate">
-              <div class="card-head"><span class="step">2</span><h3 id="h-rate">Rating kamu</h3></div>
-              <p class="note top">1 = sangat buruk, 5 = sangat baik. Pilih “–” untuk aspek yang tidak ingin kamu nilai.</p>
+            <details class="card adv">
+              <summary><span><strong>Pengaturan lanjutan</strong> <em>(opsional)</em></span><span class="adv-sub">Tambahkan penilaianmu sendiri per aspek</span></summary>
+              <div class="adv-body" aria-labelledby="h-rate">
+              <h3 id="h-rate" class="visually-hidden">Rating kamu</h3>
+              <p class="note top">Kalau kamu ingin ikut menilai: 1 = sangat buruk, 5 = sangat baik. Pilih “–” untuk aspek yang tidak ingin kamu nilai.</p>
               <div id="rateList" class="rate-list"></div>
 
               <div class="field influ">
                 <div class="influ-head">
-                  <label for="weight">Pengaruh rating kamu terhadap skor akhir</label>
+                  <label for="weight">Seberapa besar rating kamu ikut menentukan</label>
                   <output id="weightOut" class="pill-out">50%</output>
                 </div>
                 <input id="weight" class="range" type="range" min="0" max="100" step="10" value="50" aria-describedby="weightHelp">
-                <div class="range-scale"><span>Hanya model</span><span>Hanya rating kamu</span></div>
-                <p class="note" id="weightHelp">Skor akhir = (100% − pengaruh) × skor model + pengaruh × rating kamu.</p>
+                <div class="range-scale"><span>Hanya dari teks</span><span>Hanya rating kamu</span></div>
+                <p class="note" id="weightHelp">Nilai akhir = (100% − pengaruh) × nilai dari teks + pengaruh × rating kamu.</p>
               </div>
-            </section>
+              </div>
+            </details>
 
             <div class="actions">
               <button class="pill pill-solid pill-lg" id="runBtn" type="button">
@@ -165,6 +171,7 @@
 
             <div id="results" hidden>
               <section class="verdict" id="verdict" aria-labelledby="verdictHead"></section>
+              <p class="disclaimer">Hasil ini perkiraan. Nilai dihitung otomatis dari kata-kata di review, bukan penilaian pasti. Review berbahasa Inggris dan yang sangat singkat kurang akurat.</p>
               <div class="kpis" id="kpis"></div>
 
               <section class="card" id="markCard" hidden aria-labelledby="h-mark">
@@ -195,7 +202,7 @@
 
               <section class="card" aria-labelledby="h-gem">
                 <div class="card-head between"><h3 id="h-gem">Penjelasan singkat dari AI</h3><span class="badge badge-ai">AI</span></div>
-                <p class="note top">Gemini hanya merangkum angka di atas dalam beberapa kalimat. Angkanya tidak berubah.</p>
+                <p class="note top">AI (Gemini) hanya menjelaskan angka di atas dalam beberapa kalimat. Angkanya tidak berubah.</p>
                 <button class="pill pill-outline" id="gemBtn" type="button">Tulis kesimpulan</button>
                 <div id="gemOut" class="gem-out" hidden></div>
                 <details class="evidence" id="gemDetail" hidden><summary>Detail teknis</summary><div id="gemAttempts" class="mono"></div></details>
@@ -209,7 +216,7 @@
     <!-- ================= BENCHMARK ================= -->
     <section class="sec" id="benchmark" aria-labelledby="h-bench">
       <div class="wrap">
-        <p class="eyebrow dark reveal">Jelajah benchmark</p>
+        <p class="eyebrow dark reveal">Rata-rata hotel</p>
         <h2 class="sec-title reveal" id="h-bench">Hotel bintang berapa,<br>unggul di mana?</h2>
         <p class="sec-lead reveal">Rata-rata skor tiap aspek dari <span id="bnReviews">ribuan</span> review hotel. Klik sebuah kotak untuk detailnya.</p>
         <div class="heat-wrap reveal">
@@ -254,10 +261,12 @@
     </section>
   </main>
 
-  <footer class="foot">
+  <footer class="foot" id="tentang">
     <div class="foot-in">
-      <span class="wordmark">ASPEK<span>/</span>HOTEL</span>
-      <p>Demo penelitian skripsi · analisis aspek review hotel Google Maps.</p>
+      <div class="foot-brand"><span class="wordmark">ASPEK<span>/</span>HOTEL</span><p>Demo penelitian skripsi tentang analisis aspek review hotel Google Maps.</p></div>
+      <div class="foot-col"><h4>Data</h4><p>Review Google Maps dari <span id="footReviews">10.270</span> review di <span id="footHotels">931</span> hotel, Jakarta dan Bali, bintang 1 sampai 5.</p></div>
+      <div class="foot-col"><h4>Privasi</h4><p>Teks yang kamu tempel dikirim ke server hanya untuk dihitung dan tidak disimpan oleh aplikasi ini. Jika kamu menekan “Tulis kesimpulan”, kutipan teks dan angka hasilnya dikirim ke Gemini (Google) untuk dirangkum.</p></div>
+      <div class="foot-col"><h4>Perlu diingat</h4><p>Nilai adalah perkiraan model dari kata-kata di review. Dataset hanya memiliki rating keseluruhan, sehingga ketepatan nilai per aspek belum diukur.</p></div>
     </div>
   </footer>
 

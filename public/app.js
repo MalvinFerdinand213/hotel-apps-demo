@@ -39,9 +39,9 @@
     $("tierSeg").innerHTML = TIERS.map((t) =>
       `<span><input type="radio" name="tier" id="tier-${t}" value="${t}"${t === S.tier ? " checked" : ""}>` +
       `<label for="tier-${t}">${t}★${avail.includes(t) ? "" : '<i class="dot" title="belum ada pembanding"></i>'}</label></span>`).join("");
-    $("tierNote").textContent = avail.length
-      ? `Pembanding tersedia untuk hotel ${avail.map((t) => t + "★").join(", ")}. Bintang lain tetap dinilai, tetapi belum bisa dibandingkan (titik kuning).`
-      : "Belum ada data pembanding.";
+    $("tierNote").textContent = avail.length === 5 || !avail.length
+      ? "Review akan dibandingkan dengan rata-rata hotel yang bintangnya sama."
+      : `Pembanding ada untuk hotel ${avail.map((t) => t + "★").join(", ")}. Bintang lain tetap dinilai tetapi belum bisa dibandingkan (titik kuning).`;
     $("heroTiers").textContent = avail.length ? `${avail.map((t) => t + "★").join(", ")}` : "bintang yang sama";
     $("tierSeg").addEventListener("change", (e) => {
       S.tier = Number(e.target.value);
@@ -184,7 +184,7 @@
       `<div class="kpi"><div class="k">Nilai review ini</div><div class="v">${k1v}<small>/5</small></div><div class="s">${k1s}</div></div>` +
       `<div class="kpi"><div class="k">Rata-rata hotel ${tier}★</div><div class="v">${ov ? f2(ov.tier) + "<small>/5</small>" : "–"}</div><div class="s">${hasBench ? '<span class="dim">dari data pembanding</span>' : '<span class="dim">belum ada data</span>'}</div></div>` +
       `<div class="kpi"><div class="k">Aspek yang disebut</div><div class="v">${rated.length}<small>/${ASPECTS.length}</small></div><div class="s"><span class="dim">${rated.length < ASPECTS.length ? "sisanya tidak disebut" : "semua aspek"}</span></div></div>` +
-      `<div class="kpi"><div class="k">Pola paling mirip hotel</div><div class="v">${near ? near + "★" : "–"}</div><div class="s"><span class="dim">${near && near !== tier ? `bukan ${tier}★` : near ? "sesuai pilihanmu" : ""}</span></div></div>`;
+      `<div class="kpi"><div class="k">Paling mirip hotel</div><div class="v">${near ? near + "★" : "–"}</div><div class="s"><span class="dim">${near && near !== tier ? `bukan ${tier}★` : near ? "sesuai pilihanmu" : ""}</span></div></div>`;
 
     renderVerdict(table, ov, tier);
     renderMarks(fused);
@@ -221,7 +221,7 @@
     const evs = ASPECTS.filter((a) => S.evidence && S.evidence[a] && S.evidence[a].length);
     $("evidenceBox").hidden = !evs.length;
     $("evidence").innerHTML = evs.map((a) =>
-      `<div><div class="ev-a">${esc(a)} <span class="dim">· skor model ${f1(S.scores[a])}</span></div><div class="ev-q">${S.evidence[a].map((e) => `“${esc(e)}”`).join(" · ")}</div></div>`).join("");
+      `<div><div class="ev-a">${esc(a)} <span class="dim">· nilai ${f1(S.scores[a])}</span></div><div class="ev-q">${S.evidence[a].map((e) => `“${esc(e)}”`).join(" · ")}</div></div>`).join("");
 
     /* ringkasan */
     const sum = Core.ruleSummary(table, ov, near, tier, diff);
@@ -318,6 +318,9 @@
     $("resetBtn").addEventListener("click", reset);
     $("gemBtn").addEventListener("click", gemini);
     $("text").addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run(); });
+    document.querySelectorAll(".ex").forEach((b) => b.addEventListener("click", () => {
+      $("text").value = EXAMPLES[b.dataset.ex]; $("text").dispatchEvent(new Event("input", { bubbles: true })); $("text").focus();
+    }));
     $("photos").addEventListener("change", (e) => {
       for (const f of Array.from(e.target.files)) {
         if (S.photos.length >= 6 || f.size > 8 * 1024 * 1024) continue;
@@ -391,6 +394,11 @@
     document.querySelectorAll("#bigstats .reveal").forEach((el) => el.classList.add("in"));
   }
 
+  const EXAMPLES = {
+    pos: "Luar biasa, sangat puas! Lokasi strategis dan mudah dicari. Kamar sangat bersih, wangi, luas, dan fasilitasnya lengkap. Pelayanan prima, staf ramah dan sigap. Makanan dan sarapannya enak sekali. Harga sepadan dengan kualitasnya, pasti menginap lagi.",
+    net: "Hotel biasa saja. Kamar lumayan bersih tapi AC kurang dingin dan wifi sering putus. Staf ramah tapi pelayanannya agak lambat. Lokasi lumayan dekat dari stasiun. Sarapan standar, pilihannya terbatas. Harganya sesuai, tidak murah tidak mahal.",
+    neg: "Sangat kecewa. Kamar kotor dan berbau, kamar mandi ada rambut dan jamur. Staf tidak peduli saat saya komplain, malah dicuekin. Sarapannya basi dan tidak enak. Harga mahal tapi kualitas jelek sekali, tidak akan menginap lagi.",
+  };
   function polish() {
     const nav = $("nav");
     const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 8);
@@ -406,6 +414,9 @@
   function setStats() {
     const set = (id, v) => { const el = $(id); if (el && v) el.dataset.count = String(v); };
     set("statReviews", META.n_reviews); set("statHotels", META.n_hotels);
+    const fr = $("footReviews"), fh = $("footHotels");
+    if (fr && META.n_reviews) fr.textContent = META.n_reviews.toLocaleString("id-ID");
+    if (fh && META.n_hotels) fh.textContent = META.n_hotels.toLocaleString("id-ID");
     set("statTiers", Core.availableTiers(BENCH).length || 5);
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.querySelectorAll("[data-count]").forEach((el) => {
