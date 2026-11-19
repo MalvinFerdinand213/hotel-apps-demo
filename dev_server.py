@@ -15,7 +15,7 @@ def load(name):
     return mod.handler
 
 
-ROUTES = {"/api/score": load("score"), "/api/summary": load("summary"), "/api/batch": load("batch")}
+ROUTES = {"/api/score": load("score"), "/api/summary": load("summary")}
 
 
 class Dev(SimpleHTTPRequestHandler):

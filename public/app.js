@@ -371,10 +371,9 @@
       const r = xs.reduce((s, v, i) => s + (v - mx) * (ys[i] - my), 0) / Math.sqrt(xs.reduce((s, v) => s + (v - mx) ** 2, 0) * ys.reduce((s, v) => s + (v - my) ** 2, 0) || 1);
       const hi = ys.indexOf(Math.max(...ys)), lo = ys.indexOf(Math.min(...ys));
       return { a, r, range: Math.max(...ys) - Math.min(...ys), hi: tiers[hi], lo: tiers[lo], first: ys[0], last: ys[n - 1] };
-    }).sort((x, y) => y.range - x.range);
+    }).sort((x, y) => y.range - x.range).slice(0, 3);
     $("insights").innerHTML = items.map((x) => {
-      const txt = x.range < 0.2 ? `Hampir sama di semua bintang hotel (selisih tertinggi dan terendah hanya ${fmt1(x.range)}).`
-        : x.r > 0.7 ? `Makin tinggi bintang hotelnya, makin <strong>tinggi</strong> skor ${x.a.toLowerCase()} (${fmt1(x.first)} di ${tiers[0]}★ menjadi ${fmt1(x.last)} di ${tiers[tiers.length - 1]}★).`
+      const txt = x.r > 0.7 ? `Makin tinggi bintang hotelnya, makin <strong>tinggi</strong> skor ${x.a.toLowerCase()} (${fmt1(x.first)} di ${tiers[0]}★ menjadi ${fmt1(x.last)} di ${tiers[tiers.length - 1]}★).`
         : x.r < -0.7 ? `Makin tinggi bintang hotelnya, makin <strong>rendah</strong> skor ${x.a.toLowerCase()} (${fmt1(x.first)} di ${tiers[0]}★ menjadi ${fmt1(x.last)} di ${tiers[tiers.length - 1]}★).`
         : `Skor ${x.a.toLowerCase()} paling tinggi di hotel ${x.hi}★ dan paling rendah di hotel ${x.lo}★.`;
       return `<div class="ins reveal"><span class="ins-a">${x.a}</span><p>${txt}</p></div>`;
@@ -392,184 +391,6 @@
       ].map(([v, t]) => `<div class="bs reveal"><div class="bs-v">${v}</div><p>${t}</p></div>`).join("");
     } catch (e) { $("bigstats").hidden = true; }
     document.querySelectorAll("#bigstats .reveal").forEach((el) => el.classList.add("in"));
-  }
-
-  /* ------------------------------------------------------------ profil hotel (banyak review) */
-  const H = { tier: 3, texts: [], rows: null };
-  const H_MAX = 100, H_MIN_MENTION = 3, H_BAND = 0.2;
-  const H_EXAMPLE = [
-    "Lokasi sangat strategis, dekat stasiun dan pusat belanja. Kamar bersih dan wangi, kasurnya nyaman.",
-    "Staf resepsionis ramah dan cepat membantu saat check in. Sarapannya enak dan banyak pilihan.",
-    "Kamar kotor dan bau apek, seprai ada noda. Sudah komplain tapi stafnya cuek.",
-    "Harga cukup mahal untuk kamar yang sempit dan AC tidak dingin. Kurang worth it.",
-    "Pelayanan lambat, minta handuk tambahan menunggu lebih dari satu jam. Sarapan biasa saja.",
-    "Lokasi mudah dijangkau dan dekat restoran. Kamar mandi bersih, air panasnya lancar.",
-    "Staf sangat ramah, kamar luas dan fasilitas lengkap. Harga sepadan dengan kualitasnya.",
-    "Makanan di restoran hotel hambar dan mahal. Pelayanannya juga lambat saat ramai.",
-    "Kamar bersih tapi lift sering lama dan kamar mandi agak kecil. Secara umum cukup nyaman.",
-    "Wifi sering putus dan AC berisik. Lokasi bagus, dekat mall, tapi kamarnya terasa tua.",
-  ].join("\n\n");
-
-  function parseCSV(t) {
-    const first = t.split(/\r?\n/, 1)[0] || "";
-    const d = [",", ";", "\t"].map((c) => [c, first.split(c).length]).sort((x, y) => y[1] - x[1])[0][0];
-    const rows = []; let row = [], cur = "", q = false;
-    for (let i = 0; i < t.length; i++) {
-      const c = t[i];
-      if (q) { if (c === '"') { if (t[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
-      else if (c === '"') q = true;
-      else if (c === d) { row.push(cur); cur = ""; }
-      else if (c === "\n" || c === "\r") { if (c === "\r" && t[i + 1] === "\n") i++; row.push(cur); cur = ""; if (row.some((x) => x.trim())) rows.push(row); row = []; }
-      else cur += c;
-    }
-    row.push(cur); if (row.some((x) => x.trim())) rows.push(row);
-    return rows;
-  }
-  function reviewsFromFile(text) {
-    text = text.replace(/^﻿/, "");
-    const rows = parseCSV(text);
-    if (!rows.length) return [];
-    const ncol = Math.max(...rows.map((r) => r.length));
-    if (ncol === 1) return rows.map((r) => r[0]);
-    const hd = rows[0].map((c) => c.trim());
-    let idx = hd.findIndex((c) => /^(review[_ ]?(text|teks)?|ulasan|teks|text|komentar|comment)$/i.test(c));
-    if (idx < 0) idx = hd.findIndex((c) => /review|ulasan|teks|text|komentar|comment/i.test(c) && !/rating|date|tanggal|_id$|^id$|url|star|bintang|lang|count|raw/i.test(c));
-    const header = idx >= 0 || rows[0].every((c) => c.length < 30);
-    const data = header ? rows.slice(1) : rows;
-    if (idx < 0) {
-      const avg = Array.from({ length: ncol }, (_, k) => data.slice(0, 50).reduce((s, r) => s + (r[k] || "").length, 0));
-      idx = avg.indexOf(Math.max(...avg));
-    }
-    return data.map((r) => r[idx] || "");
-  }
-  function splitBox(v) {
-    let blocks = v.split(/\n\s*\n/);
-    if (blocks.length === 1) blocks = v.split(/\n/);
-    return blocks;
-  }
-  const clean = (arr) => arr.map((x) => String(x).replace(/<\s*\/?\s*(?:br|p|div|span)\b[^>]*>/gi, " ").replace(/\s+/g, " ").trim()).filter((x) => x.length >= 10);
-
-  function hotelUpdateCount() {
-    const n = clean(splitBox($("hText").value)).length;
-    $("hCount").textContent = `${n} review` + (n > H_MAX ? ` (dipakai ${H_MAX} pertama)` : "");
-  }
-
-  async function hotelRun() {
-    const err = $("hError"); err.hidden = true;
-    let texts = clean(splitBox($("hText").value));
-    if (!texts.length) { err.textContent = "Tempel beberapa review dulu (tiap review minimal 10 karakter)."; err.hidden = false; return; }
-    const cut = texts.length > H_MAX; texts = texts.slice(0, H_MAX);
-    const btn = $("hRun"), lbl = $("hRunLabel");
-    btn.disabled = true; lbl.innerHTML = '<span class="spin"></span> Menganalisis…';
-    try {
-      const r = await fetch("/api/batch", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ texts }) });
-      let d = {}; try { d = await r.json(); } catch (e) { /* bukan JSON */ }
-      if (!r.ok || !d.results) throw new Error(d.error || `Server membalas ${r.status}.`);
-      H.texts = texts; H.rows = d.results; H.cut = cut;
-      hotelRender();
-      if (matchMedia("(max-width: 980px)").matches) $("hResults").scrollIntoView({ behavior: "smooth", block: "start" });
-    } catch (e) { err.textContent = "Analisis gagal: " + e.message; err.hidden = false; }
-    finally { btn.disabled = false; lbl.textContent = "Buat profil"; }
-  }
-
-  function hotelRender() {
-    const tier = H.tier, rows = H.rows, N = rows.length;
-    const bt = BENCH[String(tier)] || {};
-    const agg = ASPECTS.map((a) => {
-      const v = rows.map((r) => r[a]).filter((x) => x !== null && x !== undefined);
-      const mean = v.length ? v.reduce((s, x) => s + x, 0) / v.length : null;
-      const tm = bt[a] ? bt[a].mean : null;
-      const gap = mean !== null && tm !== null ? mean - tm : null;
-      const enough = v.length >= H_MIN_MENTION;
-      const status = !enough ? "data" : gap === null ? "-" : Math.abs(gap) < H_BAND ? "setara" : gap > 0 ? "atas" : "bawah";
-      return { a, n: v.length, mean, tm, gap, enough, status };
-    });
-    const ok = agg.filter((x) => x.enough && x.gap !== null);
-    $("hEmpty").hidden = true; $("hResults").hidden = false;
-
-    /* kesimpulan */
-    const best = ok.slice().sort((x, y) => y.gap - x.gap)[0], worst = ok.slice().sort((x, y) => x.gap - y.gap)[0];
-    let head;
-    if (!ok.length) head = "Belum cukup data untuk dibandingkan";
-    else if (worst.gap >= -H_BAND) head = `Hotel ini <em>tidak punya aspek yang tertinggal</em> dibanding hotel bintang ${tier}.`;
-    else head = `Yang paling perlu diperbaiki: <em>${esc(worst.a)}</em>.`;
-    const sub = ok.length > 1 && best.gap > H_BAND ? `Keunggulan terbesar: <strong>${esc(best.a)}</strong>.` : "";
-    const tiles = agg.map((x) => {
-      if (!x.enough) return `<div class="vt none"><div class="vt-a">${x.a}</div><div class="vt-l">Data kurang</div><div class="vt-n">disebut di ${x.n} dari ${N} review</div></div>`;
-      const [lb, cls] = label(x.mean);
-      const rel = x.status === "atas" ? `Lebih baik dari hotel ${tier}★ biasanya` : x.status === "bawah" ? `Lebih buruk dari hotel ${tier}★ biasanya` : x.status === "setara" ? `Setara hotel ${tier}★ biasanya` : "";
-      return `<div class="vt ${cls}"><div class="vt-a">${x.a}</div><div class="vt-l">${lb}</div><div class="vt-r">${rel}</div><div class="vt-n">disebut di ${x.n} dari ${N} review</div></div>`;
-    }).join("");
-    $("hVerdict").innerHTML = `<p class="eyebrow dark">Profil dari ${N} review</p><h3 id="hVerdictHead">${head}</h3>${sub ? `<p class="vsub">${sub}</p>` : ""}<div class="vgrid">${tiles}</div>`;
-    $("hDisclaimer").textContent = `Perkiraan otomatis dari kata-kata di review. Aspek dibandingkan bila disebut minimal ${H_MIN_MENTION} kali; selisih kurang dari ${String(H_BAND).replace(".", ",")} dianggap setara.` + (H.cut ? ` Hanya ${H_MAX} review pertama yang dipakai.` : "");
-
-    /* grafik */
-    $("hLegend").innerHTML = `<span><i class="lg-bar"></i>Rata-rata hotel ini</span><span><i class="lg-tick"></i>Rata-rata hotel ${tier}★</span>`;
-    $("hChart").innerHTML = agg.map((x) => {
-      if (x.mean === null) return `<div class="crow none"><div class="aspect">${icon(x.a)}<span>${x.a}</span></div><div class="track"></div><div class="val">tidak disebut</div></div>`;
-      const tick = x.tm !== null ? `<div class="tick" style="left:${pct(x.tm)}%"></div>` : "";
-      return `<div class="crow${x.enough ? "" : " none"}"><div class="aspect">${icon(x.a)}<span>${x.a}</span></div><div class="track"><div class="bar" style="width:${pct(x.mean)}%"></div>${tick}</div>` +
-        `<div class="val">${f2(x.mean)}${x.tm !== null ? `<small>vs ${f2(x.tm)}</small>` : ""}</div></div>`;
-    }).join("");
-
-    /* prioritas */
-    const below = ok.filter((x) => x.gap < -H_BAND).sort((x, y) => x.gap - y.gap);
-    const above = ok.filter((x) => x.gap > H_BAND).sort((x, y) => y.gap - x.gap);
-    const line = (x, w) => `<div class="prio-row"><span class="prio-tag ${w}">${w === "bad" ? "Perbaiki" : "Pertahankan"}</span><p><strong>${esc(x.a)}</strong>: rata-rata ${f2(x.mean)} vs ${f2(x.tm)} di hotel ${tier}★ (${sgn(x.gap)}). <small>Disebut di ${x.n} review.</small></p></div>`;
-    const lack = agg.filter((x) => !x.enough);
-    $("hPrio").innerHTML = (below.map((x) => line(x, "bad")).join("") + above.map((x) => line(x, "good")).join("") +
-      (lack.length ? `<div class="prio-row"><span class="prio-tag mid">Data kurang</span><p>${lack.map((x) => esc(x.a)).join(", ")} disebut kurang dari ${H_MIN_MENTION} kali, jadi belum dibandingkan.</p></div>` : "")) ||
-      '<p class="dim">Semua aspek setara dengan rata-rata hotel sebintang.</p>';
-
-    /* review paling negatif */
-    const per = rows.map((r, i) => {
-      const e = ASPECTS.filter((a) => r[a] != null).map((a) => [a, r[a]]);
-      if (!e.length) return null;
-      const m = e.reduce((s, x) => s + x[1], 0) / e.length, low = e.slice().sort((x, y) => x[1] - y[1])[0];
-      return { i, m, low };
-    }).filter(Boolean).filter((x) => x.m < 3).sort((x, y) => x.m - y.m).slice(0, 3);
-    $("hQuotesCard").hidden = !per.length;
-    $("hQuotes").innerHTML = per.map((x) => {
-      const t = H.texts[x.i]; return `<div class="quote">“${esc(t.length > 240 ? t.slice(0, 240) + "…" : t)}”<small>Nilai ${f1(x.m)} · paling rendah: ${esc(x.low[0])} (${f1(x.low[1])})</small></div>`;
-    }).join("");
-  }
-
-  function hotelDownload() {
-    if (!H.rows) return;
-    const q = (s) => '"' + String(s).replace(/"/g, '""') + '"';
-    const head = ["review", ...ASPECTS, "rata_rata"].map(q).join(",");
-    const lines = H.rows.map((r, i) => {
-      const v = ASPECTS.map((a) => r[a]).filter((x) => x != null);
-      return [q(H.texts[i]), ...ASPECTS.map((a) => (r[a] == null ? "" : r[a])), v.length ? (v.reduce((s, x) => s + x, 0) / v.length).toFixed(2) : ""].join(",");
-    });
-    const blob = new Blob(["﻿" + [head, ...lines].join("\r\n")], { type: "text/csv;charset=utf-8" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "hasil_profil_hotel.csv";
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-  }
-
-  function buildHotel() {
-    const avail = Core.availableTiers(BENCH);
-    if (!avail.length) { $("hotel").hidden = true; return; }
-    H.tier = avail.includes(3) ? 3 : avail[0];
-    $("hTierSeg").innerHTML = TIERS.map((t) =>
-      `<span><input type="radio" name="htier" id="ht-${t}" value="${t}"${t === H.tier ? " checked" : ""}${avail.includes(t) ? "" : " disabled"}><label for="ht-${t}">${t}★</label></span>`).join("");
-    $("hTierSeg").addEventListener("change", (e) => { H.tier = Number(e.target.value); if (H.rows) hotelRender(); });
-    $("hText").addEventListener("input", hotelUpdateCount);
-    $("hRun").addEventListener("click", hotelRun);
-    $("hDownload").addEventListener("click", hotelDownload);
-    $("hExample").addEventListener("click", () => { $("hText").value = H_EXAMPLE; hotelUpdateCount(); });
-    $("hReset").addEventListener("click", () => { $("hText").value = ""; hotelUpdateCount(); H.rows = null; $("hResults").hidden = true; $("hEmpty").hidden = false; $("hError").hidden = true; });
-    $("hFile").addEventListener("change", (e) => {
-      const f = e.target.files[0]; e.target.value = ""; if (!f) return;
-      if (f.size > 2 * 1024 * 1024) { $("hError").textContent = "File terlalu besar (maksimal 2 MB)."; $("hError").hidden = false; return; }
-      const rd = new FileReader();
-      rd.onload = () => {
-        const list = clean(reviewsFromFile(String(rd.result)));
-        if (!list.length) { $("hError").textContent = "Tidak ada review yang terbaca dari file itu."; $("hError").hidden = false; return; }
-        $("hError").hidden = true; $("hText").value = list.join("\n\n"); hotelUpdateCount();
-      };
-      rd.readAsText(f, "utf-8");
-    });
   }
 
   const EXAMPLES = {
@@ -606,6 +427,6 @@
     });
   }
   polish();
-  init().then(() => { buildBenchmark(); buildHotel(); setStats(); }, setStats);
+  init().then(() => { buildBenchmark(); setStats(); }, setStats);
   buildResults();
 })();
