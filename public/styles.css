@@ -373,3 +373,30 @@ button { cursor: pointer; }
 .foot-col h4 { margin: 4px 0 0; font: 700 20px/1 var(--disp); text-transform: uppercase; color: #fff; letter-spacing: .04em; }
 @media (max-width: 980px) { .foot-in { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .foot-in { grid-template-columns: 1fr; } .adv summary { padding: 20px; } .adv-body { padding: 0 20px 22px; } }
+/* sel heatmap mengikuti tema (terang/gelap) lewat variabel warna */
+.hc.hi { background: color-mix(in srgb, var(--ink) calc(var(--al) * 100%), var(--fill)); }
+.hc.hi[data-s] { color: var(--bg); }
+.hc.lo { background: color-mix(in srgb, #fa5400 calc(var(--al) * 100%), var(--fill)); }
+.hc.lo[data-s] { color: #fff; }
+.heat-legend .hi { background: var(--ink) !important; }
+
+/* ---------- profil hotel + penyesuaian latar bergantian ---------- */
+.sec:not(.sec-gray) .bs, .sec:not(.sec-gray) .fig, .sec:not(.sec-gray) .honest { background: var(--bg-alt); }
+.sec-gray .heat-wrap { background: var(--surface); }
+.sec-gray .heat-detail { background: var(--bg-alt); }
+.prio { display: flex; flex-direction: column; gap: 14px; }
+.prio-row { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+.prio-tag { font: 700 15px/1 var(--disp); text-transform: uppercase; letter-spacing: .04em; padding: 7px 12px; border-radius: 999px; white-space: nowrap; }
+.prio-tag.bad { background: var(--bad-bg); color: var(--bad); }
+.prio-tag.good { background: var(--good-bg); color: var(--good); }
+.prio-tag.mid { background: var(--mid-bg); color: var(--mid); }
+.prio-row p { font-size: 16px; line-height: 1.5; }
+.prio-row p small { color: var(--ink-3); font-size: 13px; }
+.quotes { display: flex; flex-direction: column; gap: 12px; }
+.quote { background: var(--bg-alt); border-radius: var(--r-md); padding: 16px 18px; border-left: 4px solid var(--bad); font-size: 15px; line-height: 1.55; }
+.quote small { display: block; margin-top: 8px; color: var(--ink-3); font-size: 12px; }
+.card .quote { background: var(--bg-alt); }
+.sec-gray .card .quote { background: var(--bg-alt); }
+#hResults > .pill { align-self: flex-start; }
+.vt .vt-n { font-size: 12px; opacity: .72; margin-top: 4px; }
+@media (max-width: 640px) { .prio-row { grid-template-columns: 1fr; gap: 8px; } }

@@ -20,6 +20,7 @@
       <nav class="nav-links" aria-label="Navigasi utama">
         <a href="#cara">Cara kerja</a>
         <a href="#coba">Coba</a>
+        <a href="#hotel">Profil hotel</a>
         <a href="#benchmark">Rata-rata hotel</a>
         <a href="#temuan">Hasil</a>
         <a href="#metode">Metode</a>
@@ -213,8 +214,69 @@
       </div>
     </section>
 
+    <!-- ================= PROFIL HOTEL ================= -->
+    <section class="sec" id="hotel" aria-labelledby="h-hotel">
+      <div class="wrap">
+        <p class="eyebrow dark reveal">Profil hotel</p>
+        <h2 class="sec-title reveal" id="h-hotel">Satu hotel,<br>banyak review.</h2>
+        <p class="sec-lead reveal">Tempel puluhan review dari satu hotel sekaligus. Hasilnya: aspek mana yang jadi kekuatan dan mana yang perlu diperbaiki, dibanding hotel dengan bintang yang sama.</p>
+        <div class="grid">
+          <div class="col-left">
+            <section class="card" aria-labelledby="h-hin">
+              <div class="card-head"><span class="step">1</span><h3 id="h-hin">Review hotel</h3></div>
+              <div class="field">
+                <label for="hText">Tempel review (pisahkan tiap review dengan baris kosong)</label>
+                <textarea id="hText" class="textarea" rows="9" placeholder="Review pertama…&#10;&#10;Review kedua…&#10;&#10;Review ketiga…"></textarea>
+                <div class="hint-row"><span class="dim">Maksimal 100 review per analisis.</span><span class="counter" id="hCount">0 review</span></div>
+                <div class="examples">
+                  <label class="btn btn-ghost" for="hFile">Unggah file CSV</label>
+                  <input id="hFile" type="file" accept=".csv,.txt,text/csv,text/plain" hidden>
+                  <button type="button" class="ex" id="hExample">Coba contoh</button>
+                </div>
+                <p class="note">File CSV: kolomnya diberi nama “review”, “teks”, atau “ulasan”. Kalau tidak ada, kolom dengan teks terpanjang yang dipakai.</p>
+              </div>
+              <div class="field">
+                <span class="label" id="hTierLabel">Hotel ini bintang berapa?</span>
+                <div class="seg seg-tier" id="hTierSeg" role="radiogroup" aria-labelledby="hTierLabel"></div>
+              </div>
+            </section>
+            <div class="actions">
+              <button class="pill pill-solid pill-lg" id="hRun" type="button"><span id="hRunLabel">Buat profil</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
+              <button class="pill pill-outline pill-lg" id="hReset" type="button">Reset</button>
+            </div>
+            <p class="error" id="hError" role="alert" hidden></p>
+          </div>
+          <div class="col-right" aria-live="polite">
+            <section class="card empty" id="hEmpty">
+              <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+              <h3>Profil hotel muncul di sini</h3>
+              <ol class="steps"><li>Tempel banyak review atau unggah file CSV.</li><li>Pilih bintang hotelnya.</li><li>Klik <strong>Buat profil</strong>.</li></ol>
+            </section>
+            <div id="hResults" hidden>
+              <section class="verdict" id="hVerdict" aria-labelledby="hVerdictHead"></section>
+              <p class="disclaimer" id="hDisclaimer"></p>
+              <section class="card" aria-labelledby="h-hchart">
+                <div class="card-head between"><h3 id="h-hchart">Rata-rata per aspek</h3><div class="legend" id="hLegend"></div></div>
+                <div id="hChart" class="chart" role="img" aria-label="Rata-rata skor aspek hotel dibanding hotel sebintang"></div>
+              </section>
+              <section class="card" aria-labelledby="h-hprio">
+                <div class="card-head"><h3 id="h-hprio">Prioritas</h3></div>
+                <div class="prio" id="hPrio"></div>
+              </section>
+              <section class="card" aria-labelledby="h-hq" id="hQuotesCard">
+                <div class="card-head"><h3 id="h-hq">Review paling negatif</h3></div>
+                <div id="hQuotes" class="quotes"></div>
+              </section>
+              <button class="pill pill-outline" id="hDownload" type="button">Unduh hasil per review (CSV)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= BENCHMARK ================= -->
-    <section class="sec" id="benchmark" aria-labelledby="h-bench">
+    <section class="sec sec-gray" id="benchmark" aria-labelledby="h-bench">
       <div class="wrap">
         <p class="eyebrow dark reveal">Rata-rata hotel</p>
         <h2 class="sec-title reveal" id="h-bench">Hotel bintang berapa,<br>unggul di mana?</h2>
@@ -229,7 +291,7 @@
     </section>
 
     <!-- ================= HASIL PENELITIAN ================= -->
-    <section class="sec sec-gray" id="temuan" aria-labelledby="h-temuan">
+    <section class="sec" id="temuan" aria-labelledby="h-temuan">
       <div class="wrap">
         <p class="eyebrow dark reveal">Hasil penelitian</p>
         <h2 class="sec-title reveal" id="h-temuan">Seberapa bisa<br>dipercaya?</h2>
@@ -248,7 +310,7 @@
     </section>
 
     <!-- ================= METODE ================= -->
-    <section class="sec" id="metode" aria-labelledby="h-met">
+    <section class="sec sec-gray" id="metode" aria-labelledby="h-met">
       <div class="wrap">
         <p class="eyebrow dark reveal">Tentang metode</p>
         <h2 class="sec-title reveal" id="h-met">Apa yang ada<br>di balik angkanya.</h2>
